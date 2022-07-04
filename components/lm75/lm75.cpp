@@ -37,7 +37,7 @@ void LM75Component::update() {
     return;
   }
   raw_temperature = i2c::i2ctohs(raw_temperature);
-  raw_temeperature = raw_temperature >> LM75_REGISTER_DATA_SHIFT;
+  raw_temperature = raw_temperature >> LM75_REGISTER_DATA_SHIFT;
   float temperature = raw_temperature * LM75_CONVERSION_FACTOR;
   ESP_LOG(TAG, "Got Temperature=%.1f°C", temperature);
 
