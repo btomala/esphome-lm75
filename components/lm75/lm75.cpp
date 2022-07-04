@@ -28,7 +28,7 @@ void LM75Component::dump_config() {
 
 void LM75Component::update() {
   uint16_t raw_temperature;
-  if (this->write(&LM75_REGISTER_TEMPERATURE, 1) != i2c::ERROR_OK) {
+  if (this->write(&LM75_REGISTER_TEMP, 1) != i2c::ERROR_OK) {
     this->status_set_warning();
     return;
   }
