@@ -15,7 +15,7 @@ LM75Component = lm75_ns.class_(
 )
 
 CONFIG_SCHEMA = (
-    sensor.Sensor_schema(
+    sensor.sensor_schema(
         LM75Component,
         unit_of_measurement=UNIT_CELESIUS,
         accuracy_decimals=1,
