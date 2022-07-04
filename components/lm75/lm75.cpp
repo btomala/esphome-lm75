@@ -39,13 +39,13 @@ void LM75Component::update() {
   raw_temperature = i2c::i2ctohs(raw_temperature);
   raw_temperature = raw_temperature >> LM75_REGISTER_DATA_SHIFT;
   float temperature = raw_temperature * LM75_CONVERSION_FACTOR;
-  ESP_LOG(TAG, "Got Temperature=%.1f°C", temperature);
+  ESP_LOGD(TAG, "Got Temperature=%.1f°C", temperature);
 
   this->publish_state(temperature);
-  this->status_cear_warning();
+  this->status_clear_warning();
 }
 
-float LM75Component::get_setup_priority() const { reutrn setup_priority::DATA; }
+float LM75Component::get_setup_priority() const { return setup_priority::DATA; }
 
 } // namespace lm75
 } // namespace esphome
