@@ -4,12 +4,12 @@
 namespace esphome {
 namespace lm75 {
 
-static const uint8_t LM75_REGISTER_TEMP 0x00   //  Temperature register
-static const uint8_t LM75_REGISTER_CONFIG 0x01 //  Configuration register
-static const uint8_t LM75_REGISTER_THYST 0x02  //  Hysterisis register
-static const uint8_t LM75_REGISTER_TOS 0x03    //  OS register
+static const uint8_t LM75_REGISTER_TEMP = 0x00;   //  Temperature register
+static const uint8_t LM75_REGISTER_CONFIG = 0x01; //  Configuration register
+static const uint8_t LM75_REGISTER_THYST = 0x02;  //  Hysterisis register
+static const uint8_t LM75_REGISTER_TOS = 0x03;    //  OS register
 
-static const char *const TAG = "lm75"
+static const char *const TAG = "lm75";
 
 static const float LM75_CONVERSION_FACTOR = 0.125;
 static const uint8_t LM75_REGISTER_DATA_SHIFT = 5;
