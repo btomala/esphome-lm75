@@ -32,7 +32,7 @@ void LM75Component::update() {
     this->status_set_warning();
     return;
   }
-  if (this->read(reinterpret_cast<unit8_t *>(&raw_temperature), 2) != i2c::ERROR_OK) {
+  if (this->read(reinterpret_cast<uint8_t *>(&raw_temperature), 2) != i2c::ERROR_OK) {
     this->status_set_warning();
     return;
   }
