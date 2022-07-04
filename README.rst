@@ -30,7 +30,7 @@ And addit to the sensors section:
         sensor:
           - platform: lm75
             id: temperature
-            name: "Board temperature messurement"
+            name: "Board temperature measurement"
             update_interval: 60s
             address: 0x48
 
