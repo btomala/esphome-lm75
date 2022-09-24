@@ -23,9 +23,9 @@ void LM75Component::dump_config() {
     ESP_LOGE(TAG, "Communication with LM75 failed!");
   }
   LOG_UPDATE_INTERVAL(this);
-  float temperature_os = this->read_temp_(&LM75_REGISTER_TOS);
+  optional<float> temperature_os = this->read_temp_(&LM75_REGISTER_TOS);
   ESP_LOGD(TAG, "O.S. Temperature=%.1f°C", temperature_os);
-  float temperature_hyst = this->read_temp_(&LM75_REGISTER_THYST);
+  optional<float> temperature_hyst = this->read_temp_(&LM75_REGISTER_THYST);
   ESP_LOGD(TAG, "Hysterisis Temperature=%.1f°C", temperature_hyst);
   LOG_SENSOR("  ", "Temperature", this);
 }
@@ -46,11 +46,12 @@ optional<float> LM75Component::read_temp_(const uint8_t *temp_register) {
 }
 
 void LM75Component::update() {
-  float temperature = this->read_temp_(&LM75_REGISTER_TEMP);
-  ESP_LOGD(TAG, "Got Temperature=%.1f°C", temperature);
-
-  this->publish_state(temperature);
-  this->status_clear_warning();
+  optional<float> temperature = this->read_temp_(&LM75_REGISTER_TEMP);
+  if (temperature) {
+    ESP_LOGD(TAG, "Got Temperature=%.1f°C", *temperature);
+    this->publish_state(temperature);
+    this->status_clear_warning();
+  }
 }
 
 float LM75Component::get_setup_priority() const { return setup_priority::DATA; }
