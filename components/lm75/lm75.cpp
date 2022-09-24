@@ -49,7 +49,7 @@ void LM75Component::update() {
   optional<float> temperature = this->read_temp_(&LM75_REGISTER_TEMP);
   if (temperature) {
     ESP_LOGD(TAG, "Got Temperature=%.1f°C", *temperature);
-    this->publish_state(temperature);
+    this->publish_state(*temperature);
     this->status_clear_warning();
   }
 }
