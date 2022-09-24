@@ -30,15 +30,15 @@ void LM75Component::dump_config() {
   LOG_SENSOR("  ", "Temperature", this);
 }
 
-float LM75Component::read_temp_(const uint8_t *temp_register) {
+optional<float> LM75Component::read_temp_(const uint8_t *temp_register) {
   uint16_t raw_temperature;
   if (this->write(temp_register, 1) != i2c::ERROR_OK) {
     this->status_set_warning();
-    return;
+    return {};
   }
   if (this->read(reinterpret_cast<uint8_t *>(&raw_temperature), 2) != i2c::ERROR_OK) {
     this->status_set_warning();
-    return;
+    return {};
   }
   raw_temperature = i2c::i2ctohs(raw_temperature);
   raw_temperature = raw_temperature >> LM75_REGISTER_DATA_SHIFT;

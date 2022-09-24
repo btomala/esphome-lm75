@@ -15,7 +15,7 @@ class LM75Component : public PollingComponent, public i2c::I2CDevice, public sen
     float get_setup_priority() const override;
 
   protected:
-    float read_temp_(const uint8_t *temp_register);
+    optional<float> read_temp_(const uint8_t *temp_register);
 };
 } //namespace lm75
 } //namespace esphome
