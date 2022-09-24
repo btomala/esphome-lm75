@@ -24,9 +24,11 @@ void LM75Component::dump_config() {
   }
   LOG_UPDATE_INTERVAL(this);
   optional<float> temperature_os = this->read_temp_(&LM75_REGISTER_TOS);
-  ESP_LOGD(TAG, "O.S. Temperature=%.1f°C", temperature_os);
+  if(temperature_os)
+    ESP_LOGD(TAG, "O.S. Temperature=%.1f°C", *temperature_os);
   optional<float> temperature_hyst = this->read_temp_(&LM75_REGISTER_THYST);
-  ESP_LOGD(TAG, "Hysterisis Temperature=%.1f°C", temperature_hyst);
+  if(temperature_hyst)
+    ESP_LOGD(TAG, "Hysterisis Temperature=%.1f°C", *temperature_hyst);
   LOG_SENSOR("  ", "Temperature", this);
 }
 
