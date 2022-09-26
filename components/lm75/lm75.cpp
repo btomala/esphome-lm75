@@ -14,7 +14,9 @@ static const char *const TAG = "lm75";
 static const float LM75_CONVERSION_FACTOR = 0.125;
 static const uint8_t LM75_REGISTER_DATA_SHIFT = 5;
 
-void LM75Component::setup() { ESP_LOGCONFIG(TAG, "Setting up LM75..."); }
+void LM75Component::setup() {
+   ESP_LOGCONFIG(TAG, "Setting up LM75...");
+ }
 
 void LM75Component::dump_config() {
   ESP_LOGCONFIG(TAG, "LM75:");
@@ -25,11 +27,40 @@ void LM75Component::dump_config() {
   LOG_UPDATE_INTERVAL(this);
   optional<float> temperature_os = this->read_temp_(&LM75_REGISTER_TOS);
   if(temperature_os)
-    ESP_LOGD(TAG, "  O.S. Temperature: %.1f°C", *temperature_os);
+    ESP_LOGCONFIG(TAG, "  O.S. Temperature: %.1f°C", *temperature_os);
   optional<float> temperature_hyst = this->read_temp_(&LM75_REGISTER_THYST);
   if(temperature_hyst)
-    ESP_LOGD(TAG, "  Hysterisis Temperature: %.1f°C", *temperature_hyst);
+    ESP_LOGCONFIG(TAG, "  Hysterisis Temperature: %.1f°C", *temperature_hyst);
   LOG_SENSOR("  ", "Temperature", this);
+}
+
+void LM75Component::set_over_temperature_limit(int temperature){
+  ESP_LOGD(TAG, "Setting Over Temperature: %.1f°C", temperature);
+  optional<float> new_temperature = this->write_temp_(&LM75_REGISTER_TOS, temperature);
+  if(new_temperature)
+    ESP_LOGD(TAG, "New Over Temperature: %.1f°C", *new_temperature);
+}
+void LM75Component::set_hyst_temperature_limit(int temperature){
+  ESP_LOGD(TAG, "Setting Hyst Temperature: %.1f°C", temperature);
+  optional<float> new_temperature = this->write_temp_(&LM75_REGISTER_THYST, temperature);
+  if(new_temperature)
+    ESP_LOGD(TAG, "New Hyst Temperature: %.1f°C", *new_temperature);
+}
+
+optional<float> LM75Component::write_temp_(const uint8_t *temp_register, int temperature) {
+  uint16_t raw_temperature;
+  bool stop = false;
+  raw_temperature = temperature / LM75_CONVERSION_FACTOR;
+  raw_temperature = raw_temperature << LM75_REGISTER_DATA_SHIFT;
+  if (this->write(temp_register, 1, stop) != i2c::ERROR_OK) {
+    this->status_set_warning();
+    return {};
+  }
+  if (this->write(reinterpret_cast<uint8_t *>(&raw_temperature), 2) != i2c::ERROR_OK) {
+    this->status_set_warning();
+    return {};
+  }
+  return this->read_temp_(temp_register);
 }
 
 optional<float> LM75Component::read_temp_(const uint8_t *temp_register) {
@@ -46,6 +77,7 @@ optional<float> LM75Component::read_temp_(const uint8_t *temp_register) {
   raw_temperature = raw_temperature >> LM75_REGISTER_DATA_SHIFT;
   return raw_temperature * LM75_CONVERSION_FACTOR;
 }
+
 
 void LM75Component::update() {
   optional<float> temperature = this->read_temp_(&LM75_REGISTER_TEMP);
