@@ -13,6 +13,12 @@ class LM75Component : public PollingComponent, public i2c::I2CDevice, public sen
     void dump_config() override;
     void update() override;
     float get_setup_priority() const override;
+
+    void set_over_temperature_limit(int temperature);
+    void set_hyst_temperature_limit(int temperature);
+  protected:
+    optional<float> read_temp_(const uint8_t *temp_register);
+    optional<float> write_temp_(const uint8_t *temp_register, int temperature);
 };
 } //namespace lm75
 } //namespace esphome
